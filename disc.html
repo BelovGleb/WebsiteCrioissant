@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Дискография — The Beatles</title>
+  <style>
+    :root {
+      --gold: #FFD700;
+      --bg-dark: #000;
+      --bg-light: #f5f5f5;
+      --text-dark: #f8f8f8;
+      --text-light: #222;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-image: url("background.jpg");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: var(--text-dark);
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      transition: 0.4s ease;
+    }
+
+    body.light-theme {
+      background: var(--bg-light);
+      color: var(--text-light);
+    }
+
+    .overlay {
+      background-color: rgba(0, 0, 0, 0.6);
+      min-height: 100vh;
+      padding: 40px;
+      animation: fadeIn 1.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 🎵 Меню */
+    .menu {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .menu a {
+      display: inline-block;
+      background-color: rgba(255, 215, 0, 0.15);
+      color: var(--gold);
+      text-decoration: none;
+      padding: 10px 18px;
+      border-radius: 25px;
+      border: 1px solid var(--gold);
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      box-shadow: 0 0 8px rgba(255, 215, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .menu a:hover {
+      background-color: var(--gold);
+      color: #000;
+      box-shadow: 0 0 15px var(--gold);
+      transform: translateY(-2px);
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--gold);
+      text-shadow: 2px 2px 6px #000;
+      margin-bottom: 25px;
+    }
+
+    /* ⚙️ Макет страницы */
+    .main {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    /* 💿 Контент */
+    .content {
+      flex: 1 1 600px;
+      max-width: 650px;
+      background-color: rgba(0, 0, 0, 0.55);
+      border-radius: 10px;
+      padding: 25px 35px;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.1);
+    }
+
+    .album {
+      margin-bottom: 18px;
+    }
+
+    .album-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .year {
+      font-size: 16px;
+      color: var(--gold);
+      text-shadow: 1px 1px 4px #000;
+      margin: 0;
+      min-width: 58px;
+      text-align: right;
+    }
+
+    .title {
+      font-size: 18px;
+      color: #FFF8DC;
+      margin: 0;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.03);
+      transition: background 0.2s;
+      flex: 1;
+    }
+
+    .title:hover { background: rgba(255,255,255,0.06); }
+
+    .caret {
+      width: 18px;
+      height: 18px;
+      display: inline-block;
+      transform: rotate(0deg);
+      transition: transform 0.3s ease;
+      color: var(--gold);
+      font-weight: bold;
+    }
+
+    .album.open .caret { transform: rotate(90deg); }
+
+    ul {
+      list-style-type: none;
+      padding-left: 0;
+      margin: 8px 0 0 0;
+    }
+
+    /* 🎶 Список треков (скрыт по умолчанию) */
+    .tracks {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.6s cubic-bezier(.2,.8,.2,1), padding 0.4s ease;
+      padding-left: 8px;
+    }
+
+    .tracks.open {
+      max-height: 1400px; /* достаточно большое значение для плавного раскрытия длинных списков */
+      padding-top: 10px;
+      padding-bottom: 6px;
+    }
+
+    .tracks li {
+      background-color: rgba(255, 255, 255, 0.03);
+      border-left: 3px solid #FFD700;
+      font-size: 14px;
+      margin: 6px 6px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      color: #FFF8DC;
+      box-shadow: 0 0 6px rgba(0,0,0,0.2);
+    }
+
+    .disc-label {
+      display: inline-block;
+      margin: 6px 0;
+      color: #FFD700;
+      font-weight: bold;
+      text-shadow: 1px 1px 2px #000;
+    }
+
+    /* 🌟 Факты */
+    .facts {
+      flex: 0 1 300px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 215, 0, 0.4);
+      border-radius: 10px;
+      padding: 20px;
+      color: #FFFACD;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.15);
+      backdrop-filter: blur(4px);
+    }
+
+    .facts h2 {
+      color: var(--gold);
+      text-align: center;
+      text-shadow: 1px 1px 4px #000;
+      margin-bottom: 15px;
+    }
+
+    .facts ul {
+      list-style-type: "★ ";
+      padding-left: 20px;
+    }
+
+    .facts li {
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+
+    /* ===== НИЖНЯЯ ПАНЕЛЬ ===== */
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.7);
+      border-top: 1px solid rgba(255, 215, 0, 0.4);
+      padding: 20px 50px;
+      color: #FFD700;
+      font-size: 14px;
+      flex-wrap: wrap;
+      gap: 10px;
+      animation: fadeIn 2.5s ease;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: "Brush Script MT", cursive;
+      font-size: 22px;
+      color: #FFF8DC;
+      text-shadow: 0 0 6px #FFD700;
+    }
+
+    .logo img {
+      width: 40px;
+      height: 40px;
+      filter: brightness(1.2) contrast(0.9);
+      border-radius: 50%;
+    }
+
+    .footer-center {
+      text-align: center;
+      line-height: 1.4;
+      flex: 1;
+    }
+
+    .footer-right {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .theme-toggle {
+      background-color: rgba(255, 215, 0, 0.2);
+      border: 1px solid #FFD700;
+      color: #FFD700;
+      border-radius: 50%;
+      width: 38px;
+      height: 38px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      background-color: #FFD700;
+      color: #000;
+      box-shadow: 0 0 15px #FFD700;
+    }
+
+    .contact-btn {
+      background: linear-gradient(45deg, #FFD700, #FFA500);
+      border: none;
+      border-radius: 20px;
+      padding: 10px 18px;
+      font-weight: bold;
+      color: #000;
+      cursor: pointer;
+      transition: 0.4s;
+      animation: pulse 2.5s infinite;
+    }
+
+    .contact-btn:hover {
+      transform: scale(1.1);
+      background: linear-gradient(45deg, #FFA500, #FFD700);
+      box-shadow: 0 0 12px #FFD700;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
+      50% { box-shadow: 0 0 25px rgba(255, 215, 0, 0.8); }
+    }
+
+    /* Модальное окно */
+    .contact-modal {
+      display: none;
+      position: fixed;
+      z-index: 150;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.85);
+      animation: fadeIn 0.5s ease;
+    }
+
+    .contact-content {
+      background: rgba(20, 20, 20, 0.95);
+      color: #FFD700;
+      margin: 10% auto;
+      padding: 30px 50px;
+      border-radius: 15px;
+      width: 400px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+      animation: zoomIn 0.4s ease;
+    }
+
+    .close-contact {
+      float: right;
+      font-size: 28px;
+      cursor: pointer;
+      color: #FFD700;
+      transition: 0.3s;
+    }
+
+    .close-contact:hover {
+      color: white;
+    }
+
+    @keyframes zoomIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    /* Светлая тема футера */
+    body.light-theme .footer {
+      background-color: rgba(255,255,255,0.9);
+      color: #000;
+      border-top: 1px solid #bbb;
+    }
+
+    body.light-theme .theme-toggle {
+      color: #333;
+      border-color: #333;
+    }
+
+    body.light-theme .theme-toggle:hover {
+      background: #333;
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="overlay">
+    <div class="menu">
+      <a href="index.html">Главная</a>
+      <a href="Info.html">Общая информация</a>
+      <a href="History.html">История</a>
+      <a href="Film.html">Фильмография</a>
+      <a href="Link.html">Источники</a>
+      <a href="Shop.html">Заказать</a>
+      <a href="Contact.html">Контакты</a>
+    </div>
+
+    <h1><em>Дискография The Beatles</em></h1>
+
+    <div class="main">
+      <div class="content" id="albumsContainer">
+        <!-- Albums will be injected here by JS -->
+      </div>
+
+      <div class="facts">
+        <h2>Интересные факты</h2>
+        <ul>
+          <li>Песня <em>“Yesterday”</em> стала одной из самых каверируемых в истории — более 2 000 версий.</li>
+          <li>Название <em>“The Beatles”</em> — игра слов от “beat” (ритм) и “beetles” (жуки).</li>
+          <li>Альбом <em>Sgt. Pepper’s Lonely Hearts Club Band</em> считается революцией в поп-музыке.</li>
+          <li>В 1964 году Beatles одновременно занимали пять первых мест в чарте Billboard Hot 100.</li>
+          <li><em>Abbey Road</em> стал последним записанным альбомом группы.</li>
+          <li>Песня <em>“All You Need Is Love”</em> впервые прозвучала в прямом эфире на весь мир.</li>
+          <li>Логотип с барабана Ringo Starr стал культовым символом.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Нижняя панель -->
+  <footer class="footer">
+    <div class="footer-left">
+      <div class="logo">
+        <img src="CroissNoir.svg" alt="CroissNoir Logo">
+        <span>CroissNoir</span>
+      </div>
+    </div>
+
+    <div class="footer-center">
+      <p>© 2025 | Учебный проект — The Beatles</p>
+      <p>Создано в рамках курса по веб-дизайну</p>
+    </div>
+
+    <div class="footer-right">
+      <button class="theme-toggle" id="themeToggle" title="Переключить тему">🌙</button>
+      <button class="contact-btn" id="contactBtn">Контакты создателей</button>
+    </div>
+  </footer>
+
+  <!-- Модальное окно контактов -->
+  <div id="contactModal" class="contact-modal">
+    <div class="contact-content">
+      <span class="close-contact">&times;</span>
+      <h2>Контакты создателей</h2>
+      <p>Руководитель проекта: <b>Белов Глеб</b></p>
+      <p>Дизайн и разработка: <b>Команда CroissNoir</b></p>
+      <p>Email: <a href="mailto:croissnoir@gmail.com">croissnoir@gmail.com</a></p>
+    </div>
+  </div>
+
+  <script>
+    // Переключение темы
+    const themeToggle = document.getElementById("themeToggle");
+    themeToggle.addEventListener("click", () => {
+      document.body.classList.toggle("light-theme");
+      themeToggle.textContent = document.body.classList.contains("light-theme") ? "☀️" : "🌙";
+    });
+
+    // Контактное окно
+    const contactBtn = document.getElementById("contactBtn");
+    const contactModal = document.getElementById("contactModal");
+    const closeContact = document.querySelector(".close-contact");
+
+    contactBtn.onclick = () => contactModal.style.display = "block";
+    closeContact.onclick = () => contactModal.style.display = "none";
+    window.onclick = (e) => { if (e.target === contactModal) contactModal.style.display = "none"; };
+
+    // ======= ДИНАМИЧЕСКИЙ СПИСОК АЛЬБОРОВ С ТРЕКАМИ =======
+    const albums = [
+      {
+        year: "1963",
+        title: "Please Please Me (22 марта 1963)",
+        tracks: [
+          "I Saw Her Standing There","Misery","Anna (Go to Him)","Chains","Boys",
+          "Ask Me Why","Please Please Me","Love Me Do","P.S. I Love You","Baby It’s You",
+          "Do You Want to Know a Secret","A Taste of Honey","There’s a Place","Twist and Shout"
+        ]
+      },
+      {
+        year: "1963",
+        title: "With The Beatles (22 ноября 1963)",
+        tracks: [
+          "It Won’t Be Long","All I’ve Got to Do","All My Loving","Don’t Bother Me","Little Child",
+          "Till There Was You","Please Mr. Postman","Roll Over Beethoven","Hold Me Tight",
+          "You Really Got a Hold on Me","I Wanna Be Your Man","Devil in Her Heart","Not a Second Time",
+          "Money (That’s What I Want)"
+        ]
+      },
+      {
+        year: "1964",
+        title: "A Hard Day’s Night (10 июля 1964)",
+        tracks: [
+          "A Hard Day’s Night","I Should Have Known Better","If I Fell",
+          "I’m Happy Just to Dance with You","And I Love Her","Tell Me Why","Can’t Buy Me Love",
+          "Any Time at All","I’ll Cry Instead","Things We Said Today","When I Get Home",
+          "You Can’t Do That","I’ll Be Back"
+        ]
+      },
+      {
+        year: "1964",
+        title: "Beatles for Sale (4 декабря 1964)",
+        tracks: [
+          "No Reply","I’m a Loser","Baby’s in Black","Rock and Roll Music","I’ll Follow the Sun",
+          "Mr. Moonlight","Kansas City / Hey-Hey-Hey-Hey!","Eight Days a Week","Words of Love",
+          "Honey Don’t","Every Little Thing","I Don’t Want to Spoil the Party","What You’re Doing",
+          "Everybody’s Trying to Be My Baby"
+        ]
+      },
+      {
+        year: "1965",
+        title: "Help! (6 августа 1965)",
+        tracks: [
+          "Help!","The Night Before","You’ve Got to Hide Your Love Away","I Need You","Another Girl",
+          "You’re Going to Lose That Girl","Ticket to Ride","Act Naturally","It’s Only Love",
+          "You Like Me Too Much","Tell Me What You See","I’ve Just Seen a Face","Yesterday",
+          "Dizzy Miss Lizzy"
+        ]
+      },
+      {
+        year: "1965",
+        title: "Rubber Soul (3 декабря 1965)",
+        tracks: [
+          "Drive My Car","Norwegian Wood (This Bird Has Flown)","You Won’t See Me","Nowhere Man",
+          "Think for Yourself","The Word","Michelle","What Goes On","Girl","I’m Looking Through You",
+          "In My Life","Wait","If I Needed Someone","Run for Your Life"
+        ]
+      },
+      {
+        year: "1966",
+        title: "Revolver (5 августа 1966)",
+        tracks: [
+          "Taxman","Eleanor Rigby","I’m Only Sleeping","Love You To","Here, There and Everywhere",
+          "Yellow Submarine","She Said She Said","Good Day Sunshine","And Your Bird Can Sing",
+          "For No One","Doctor Robert","I Want to Tell You","Got to Get You into My Life",
+          "Tomorrow Never Knows"
+        ]
+      },
+      {
+        year: "1967",
+        title: "Sgt. Pepper’s Lonely Hearts Club Band (26 мая 1967)",
+        tracks: [
+          "Sgt. Pepper’s Lonely Hearts Club Band","With a Little Help from My Friends","Lucy in the Sky with Diamonds",
+          "Getting Better","Fixing a Hole","She’s Leaving Home","Being for the Benefit of Mr. Kite!",
+          "Within You Without You","When I’m Sixty-Four","Lovely Rita","Good Morning Good Morning",
+          "Sgt. Pepper’s Lonely Hearts Club Band (Reprise)","A Day in the Life"
+        ]
+      },
+      {
+        year: "1967",
+        title: "Magical Mystery Tour (1967)",
+        tracks: [
+          "Magical Mystery Tour","Your Mother Should Know","I Am the Walrus","The Fool on the Hill",
+          "Flying","Blue Jay Way"
+        ]
+      },
+      {
+        year: "1968",
+        title: "The Beatles (The White Album) (22 ноября 1968) — Двойной альбом",
+        discs: [
+          {
+            label: "Диск 1",
+            tracks: [
+              "Back in the U.S.S.R.","Dear Prudence","Glass Onion","Ob-La-Di, Ob-La-Da","Wild Honey Pie",
+              "The Continuing Story of Bungalow Bill","While My Guitar Gently Weeps","Happiness Is a Warm Gun",
+              "Martha My Dear","I’m So Tired","Blackbird","Piggies","Rocky Raccoon","Don’t Pass Me By",
+              "Why Don’t We Do It in the Road?","I Will","Julia"
+            ]
+          },
+          {
+            label: "Диск 2",
+            tracks: [
+              "Birthday","Yer Blues","Mother Nature’s Son","Everybody’s Got Something to Hide Except Me and My Monkey",
+              "Sexy Sadie","Helter Skelter","Long, Long, Long","Revolution 1","Honey Pie","Savoy Truffle",
+              "Cry Baby Cry","Revolution 9","Good Night"
+            ]
+          }
+        ]
+      },
+      {
+        year: "1969",
+        title: "Yellow Submarine (17 января 1969 / 8 февраля 1969)",
+        tracks: [
+          "Yellow Submarine","Only a Northern Song","All Together Now","Hey Bulldog",
+          "It’s All Too Much","All You Need Is Love"
+        ],
+        note: "Примечание: включает песни The Beatles и оркестровые композиции Дж. Мартина"
+      },
+      {
+        year: "1969",
+        title: "Abbey Road (26 сентября 1969)",
+        tracks: [
+          "Come Together","Something","Maxwell’s Silver Hammer","Oh! Darling","Octopus’s Garden",
+          "I Want You (She’s So Heavy)","Here Comes the Sun","Because","You Never Give Me Your Money",
+          "Sun King","Mean Mr. Mustard","Polythene Pam","She Came in Through the Bathroom Window",
+          "Golden Slumbers","Carry That Weight","The End","Her Majesty"
+        ]
+      },
+      {
+        year: "1970",
+        title: "Let It Be (8 мая 1970)",
+        tracks: [
+          "Two of Us","Dig a Pony","Across the Universe","I Me Mine","Dig It","Let It Be","Maggie Mae",
+          "I’ve Got a Feeling","One After 909","The Long and Winding Road","For You Blue","Get Back"
+        ]
+      }
+    ];
+
+    const container = document.getElementById("albumsContainer");
+
+    function createAlbumElement(album) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "album";
+
+      const header = document.createElement("div");
+      header.className = "album-header";
+
+      const year = document.createElement("p");
+      year.className = "year";
+      year.textContent = album.year || "";
+
+      const title = document.createElement("h3");
+      title.className = "title";
+      title.textContent = album.title;
+
+      const caret = document.createElement("span");
+      caret.className = "caret";
+      caret.textContent = "▶";
+
+      header.appendChild(year);
+      header.appendChild(caret);
+      header.appendChild(title);
+      wrapper.appendChild(header);
+
+      // tracks container
+      const tracksContainer = document.createElement("div");
+      tracksContainer.className = "tracks";
+      const tracksList = document.createElement("ul");
+
+      if (album.discs) {
+        // Double/triple albums handling
+        album.discs.forEach(d => {
+          const discLabel = document.createElement("div");
+          discLabel.className = "disc-label";
+          discLabel.textContent = d.label;
+          tracksContainer.appendChild(discLabel);
+
+          const discList = document.createElement("ul");
+          d.tracks.forEach(track => {
+            const li = document.createElement("li");
+            li.textContent = track;
+            discList.appendChild(li);
+          });
+          tracksContainer.appendChild(discList);
+        });
+      } else {
+        // single disc
+        album.tracks.forEach(track => {
+          const li = document.createElement("li");
+          li.textContent = track;
+          tracksList.appendChild(li);
+        });
+        tracksContainer.appendChild(tracksList);
+      }
+
+      // optional note
+      if (album.note) {
+        const note = document.createElement("p");
+        note.style.color = "#FFD700";
+        note.style.margin = "8px 6px 0 6px";
+        note.style.fontSize = "13px";
+        note.textContent = album.note;
+        tracksContainer.appendChild(note);
+      }
+
+      wrapper.appendChild(tracksContainer);
+
+      // Toggle on click (header)
+      header.addEventListener("click", () => {
+        const isOpen = tracksContainer.classList.toggle("open");
+        wrapper.classList.toggle("open", isOpen);
+        // Accessibility hint: change caret icon
+        caret.textContent = isOpen ? "▼" : "▶";
+
+        // Optional: smooth scroll into view when opening long tracklists
+        if (isOpen) {
+          setTimeout(() => {
+            // ensure element is visible after expand animation
+            wrapper.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          }, 200);
+        }
+      });
+
+      return wrapper;
+    }
+
+    // Populate all albums
+    albums.forEach(album => {
+      const el = createAlbumElement(album);
+      container.appendChild(el);
+    });
+
+    // All tracks are initially collapsed (tracksContainer has max-height:0)
+    // No further action needed.
+
+  </script>
+</body>
+</html>

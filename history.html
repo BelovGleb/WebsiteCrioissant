@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>История — The Beatles</title>
+  <style>
+    html {
+      scroll-behavior: smooth;
+      height: 100%;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-image: url("background.jpg");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-position: center;
+      color: #FFFAF0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+      transition: background-color 0.6s ease, color 0.6s ease;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.55);
+      z-index: -1;
+    }
+
+    body.light-theme {
+      background-color: #f4f4f4;
+      color: #222;
+      background-image: url("background-light.jpg");
+    }
+
+    body.light-theme::before {
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+
+    .menu {
+      text-align: center;
+      margin: 40px 0 30px;
+      font-weight: bold;
+      animation: fadeIn 1s ease;
+    }
+
+    .menu a {
+      display: inline-block;
+      background-color: rgba(255, 215, 0, 0.15);
+      color: #FFD700;
+      text-decoration: none;
+      padding: 10px 18px;
+      border: 1px solid #FFD700;
+      border-radius: 25px;
+      margin: 4px;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 8px rgba(255, 215, 0, 0.2);
+    }
+
+    .menu a:hover {
+      background-color: #FFD700;
+      color: #000;
+      box-shadow: 0 0 15px #FFD700;
+      transform: translateY(-2px);
+      text-decoration: none;
+    }
+
+    h1 {
+      text-align: center;
+      color: #FFD700;
+      text-shadow: 0 0 10px #FFD700, 2px 2px 4px #000;
+      margin-bottom: 20px;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 8px #FFD700, 2px 2px 4px #000; }
+      to { text-shadow: 0 0 20px #FFA500, 2px 2px 6px #000; }
+    }
+
+    .content {
+      flex: 1;
+      max-width: 900px;
+      margin: 0 auto 40px;
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 35px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+      animation: fadeInUp 1s ease;
+    }
+
+    h2 {
+      text-align: center;
+      color: #87CEFA;
+      text-shadow: 1px 1px 3px #000;
+      margin-bottom: 15px;
+    }
+
+    h3 {
+      color: #FFD700;
+      text-shadow: 1px 1px 4px #000;
+      margin-top: 40px;
+    }
+
+    ul {
+      list-style-type: square;
+      text-align: left;
+      background-color: rgba(0, 0, 0, 0.4);
+      border-radius: 10px;
+      padding: 20px 30px;
+      margin: 0 auto 30px;
+      max-width: 500px;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.1);
+    }
+
+    ul li a {
+      color: #FFD700;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    ul li a:hover {
+      color: #FFB400;
+      text-decoration: underline;
+    }
+
+    p {
+      text-align: justify;
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 15px 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.1);
+      margin: 15px 0;
+      transition: transform 0.3s ease;
+    }
+
+    p:hover {
+      transform: scale(1.01);
+    }
+
+    .footer {
+      margin-top: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.7);
+      border-top: 1px solid rgba(255, 215, 0, 0.4);
+      padding: 20px 50px;
+      color: #FFD700;
+      font-size: 14px;
+      flex-wrap: wrap;
+      gap: 10px;
+      animation: fadeIn 2.5s ease;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: "Brush Script MT", cursive;
+      font-size: 22px;
+      color: #FFF8DC;
+      text-shadow: 0 0 6px #FFD700;
+    }
+
+    .logo img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      filter: brightness(1.2) contrast(0.9);
+    }
+
+    .footer-center {
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .footer-right {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .theme-toggle {
+      background-color: rgba(255, 215, 0, 0.2);
+      border: 1px solid #FFD700;
+      color: #FFD700;
+      border-radius: 50%;
+      width: 38px;
+      height: 38px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      background-color: #FFD700;
+      color: #000;
+      box-shadow: 0 0 15px #FFD700;
+    }
+
+    .contact-btn {
+      background: linear-gradient(45deg, #FFD700, #FFA500);
+      border: none;
+      border-radius: 20px;
+      padding: 10px 18px;
+      font-weight: bold;
+      color: #000;
+      cursor: pointer;
+      transition: 0.4s;
+      animation: pulse 2.5s infinite;
+    }
+
+    .contact-btn:hover {
+      transform: scale(1.1);
+      background: linear-gradient(45deg, #FFA500, #FFD700);
+      box-shadow: 0 0 12px #FFD700;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
+      50% { box-shadow: 0 0 25px rgba(255, 215, 0, 0.8); }
+    }
+
+    .contact-modal {
+      display: none;
+      position: fixed;
+      z-index: 150;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.85);
+      animation: fadeIn 0.5s ease;
+    }
+
+    .contact-content {
+      background: rgba(20, 20, 20, 0.95);
+      color: #FFD700;
+      margin: 10% auto;
+      padding: 30px 50px;
+      border-radius: 15px;
+      width: 400px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+      animation: zoomIn 0.4s ease;
+    }
+
+    .close-contact {
+      float: right;
+      font-size: 28px;
+      cursor: pointer;
+      color: #FFD700;
+      transition: 0.3s;
+    }
+
+    .close-contact:hover {
+      color: white;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes zoomIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    body.light-theme .footer {
+      background-color: rgba(255,255,255,0.9);
+      color: #000;
+      border-top: 1px solid #bbb;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="menu">
+    <a href="index.html">Главная</a>
+    <a href="Info.html">Общая информация</a>
+    <a href="Film.html">Фильмография</a>
+    <a href="Disc.html">Дискография</a>
+    <a href="Link.html">Источники</a>
+    <a href="Shop.html">Заказать</a>
+    <a href="Contact.html">Контакты</a>
+  </div>
+
+  <div class="content">
+    <h1><em>История группы The Beatles</em></h1>
+    <h2>Содержание</h2>
+
+    <ul>
+      <li><a href="#c1">Начало</a></li>
+      <li><a href="#c2">Название</a></li>
+      <li><a href="#c3">Первые гастроли</a></li>
+      <li><a href="#c4">Первый контракт</a></li>
+      <li><a href="#c5">Белый альбом</a></li>
+      <li><a href="#c6">Последние альбомы и распад</a></li>
+    </ul>
+
+    <section id="c1">
+      <h3>Начало</h3>
+      <p>The Beatles зародились в конце 1950-х в Ливерпуле — городе, который в те годы переживал подъём музыкальной жизни. Джон Леннон создал школьную группу <em>The Quarrymen</em>, исполнявшую рок-н-ролл в духе Элвиса и Бадди Холли. Вскоре к нему присоединился молодой Пол Маккартни, затем — гитарист Джордж Харрисон, чей технический талант впечатлил Леннона. Эти трое стали сердцем будущих Beatles. Изначально они играли на любительских вечеринках, но их энергия и стремление к совершенству быстро вывели их за рамки школьных подвалов.</p>
+      <p>Ключевым моментом стало знакомство с менеджером Брайаном Эпштейном — человеком, поверившим в талант юных музыкантов. Он помог группе сменить стиль, подобрать единый образ и профессионально подойти к репертуару. Так началась история, которая навсегда изменила музыку.</p>
+    </section>
+
+    <section id="c2">
+      <h3>Название</h3>
+      <p>Название «The Beatles» — результат творческой игры слов. Леннон и Сатклифф хотели соединить слово <em>beat</em> («ритм») и «beetles» («жуки»), вдохновившись названием группы Бадди Холли <em>The Crickets</em>. Игра слов отражала музыкальную суть коллектива: бит — ритм сердца, символ движения и молодости. С этого момента каждая афиша, где появлялось слово <strong>The Beatles</strong>, становилась олицетворением новой музыкальной волны.</p>
+      <p>Название стало не просто брендом — оно отразило дух поколения, объединённого энергией перемен, протестом против рутины и верой в свободу творчества.</p>
+    </section>
+
+    <section id="c3">
+      <h3>Первые гастроли</h3>
+      <p>Путь к успеху начался с поездок в Гамбург. Там молодые британцы играли по восемь часов в сутки в клубах, полных моряков и туристов. Эти выступления закалили их физически и творчески. В Гамбурге The Beatles научились держать сцену, работать с публикой и создавать настоящий рок-н-ролльный драйв.</p>
+      <p>Именно в этот период они стали настоящей группой — с характером, стилем и особой атмосферой. Плотный график, проживание в скромных условиях и постоянное выступление сделали их единым организмом. Леннон позже признавался, что именно в Гамбурге The Beatles «выросли» как музыканты.</p>
+    </section>
+
+    <section id="c4">
+      <h3>Первый контракт</h3>
+      <p>После возвращения в Англию судьба свела их с продюсером Джорджем Мартином — человеком, который превратил амбициозную группу в музыкальный феномен. Подписав контракт со студией <em>EMI</em>, Beatles начали записывать первые синглы. Песня <strong>"Love Me Do"</strong> стала прорывом, а за ней последовал альбом <strong>"Please Please Me"</strong>, поднявший группу на вершину британских чартов.</p>
+      <p>Благодаря Мартину звучание Beatles стало узнаваемым: чистое, энергичное, с богатой вокальной гармонией. Каждый новый релиз сопровождался шквалом восторгов, а концерты собирали тысячи фанатов, кричащих так громко, что музыканты едва слышали себя на сцене. Это был взрыв под названием «битломания».</p>
+    </section>
+
+    <section id="c5">
+      <h3>«Белый альбом»</h3>
+      <p>«Белый альбом» (1968) — это музыкальная энциклопедия, в которой Beatles показали всё, на что способны. Здесь соседствуют баллады и хард-рок, авангард и акустика, безумие и нежность. Он стал отражением внутренней раздвоенности коллектива: каждый участник стремился выразить себя как индивидуальность.</p>
+      <p>Джон создавал философские песни вроде <em>“Revolution”</em>, Пол писал мелодичные произведения вроде <em>“Blackbird”</em>, Джордж открылся с духовной стороны в <em>“While My Guitar Gently Weeps”</em>. Несмотря на конфликты и напряжённость, альбом стал символом свободы творчества и доказательством того, что даже в разногласиях можно родить великое искусство.</p>
+    </section>
+
+    <section id="c6">
+      <h3>Последние альбомы и распад</h3>
+      <p>К концу 1960-х отношения между участниками ухудшились. Разногласия в студии, влияние Йоко Оно, творческая усталость — всё это вело к распаду. Тем не менее, они сумели создать два шедевра — <strong>"Abbey Road"</strong> и <strong>"Let It Be"</strong>. Первый стал торжественным финалом их пути: композиция <em>“Come Together”</em> объединила всю философию Beatles в одной фразе — «вместе, но разные».</p>
+      <p>В 1970 году Маккартни объявил о выходе из группы, и мир замер. Но Beatles не исчезли. Их песни остались в сердцах миллионов, став саундтреком к жизни целых поколений. И сегодня их музыка звучит с той же силой, как и полвека назад — в наушниках, на концертах, в душах людей по всему миру.</p>
+    </section>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-left">
+      <div class="logo">
+        <img src="CroissNoir.png" alt="CroissNoir Logo">
+        <span>CroissNoir</span>
+      </div>
+    </div>
+
+    <div class="footer-center">
+      <p>© 2025 | Учебный проект — The Beatles</p>
+      <p>Создано в рамках курса по веб-дизайну</p>
+    </div>
+
+    <div class="footer-right">
+      <button class="theme-toggle" id="themeToggle" title="Переключить тему">🌙</button>
+      <button class="contact-btn" id="contactBtn">Контакты создателей</button>
+    </div>
+  </footer>
+
+  <div id="contactModal" class="contact-modal">
+    <div class="contact-content">
+      <span class="close-contact">&times;</span>
+      <h2>Контакты создателей</h2>
+      <p>Руководитель проекта: <b>Белов Глеб</b></p>
+      <p>Дизайн и разработка: <b>Команда CroissNoir</b></p>
+      <p>Email: <a href="mailto:croissnoir@gmail.com">croissnoir@gmail.com</a></p>
+	  

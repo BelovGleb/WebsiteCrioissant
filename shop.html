@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Заказать — The Beatles</title>
+
+  <style>
+    html {
+      scroll-behavior: smooth;
+      height: 100%;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-image: url("background.jpg");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-position: center;
+      color: #FFFAF0;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      line-height: 1.6;
+      transition: background-color 0.5s ease, color 0.5s ease;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.45);
+      z-index: -1;
+    }
+
+    body.light-theme {
+      background-color: #f4f4f4;
+      color: #222;
+      background-image: url("background-light.jpg");
+    }
+
+    body.light-theme::before {
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+
+    /* Меню */
+    .menu {
+      text-align: center;
+      margin: 40px 0 30px;
+      font-weight: bold;
+      animation: fadeIn 1s ease;
+    }
+
+    .menu a {
+      display: inline-block;
+      background-color: rgba(255, 215, 0, 0.15);
+      color: #FFD700;
+      text-decoration: none;
+      padding: 10px 18px;
+      border: 1px solid #FFD700;
+      border-radius: 25px;
+      margin: 4px;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 8px rgba(255, 215, 0, 0.2);
+    }
+
+    .menu a:hover {
+      background-color: #FFD700;
+      color: #000;
+      box-shadow: 0 0 15px #FFD700;
+      transform: translateY(-2px);
+      text-decoration: none;
+    }
+
+    h1 {
+      text-align: center;
+      color: #FFD700;
+      text-shadow: 0 0 10px #FFD700, 2px 2px 4px #000;
+      margin-bottom: 20px;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 8px #FFD700, 2px 2px 4px #000; }
+      to { text-shadow: 0 0 20px #FFA500, 2px 2px 6px #000; }
+    }
+
+    .content {
+      flex: 1;
+      max-width: 900px;
+      margin: 0 auto 40px;
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 35px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+      animation: fadeInUp 1s ease;
+    }
+
+    .product-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+      margin-top: 25px;
+    }
+
+    .product {
+      background-color: rgba(255, 215, 0, 0.1);
+      border: 1px solid #FFD700;
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.15);
+      transition: all 0.3s ease;
+    }
+
+    .product:hover {
+      background-color: rgba(255, 215, 0, 0.25);
+      box-shadow: 0 0 18px rgba(255, 215, 0, 0.4);
+      transform: translateY(-5px);
+    }
+
+    .product img {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .product h3 {
+      color: #FFD700;
+      margin-bottom: 10px;
+    }
+
+    .product p {
+      font-size: 15px;
+      color: #FFF8DC;
+    }
+
+    .buy-btn {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1px solid #FFD700;
+      background-color: rgba(255, 215, 0, 0.15);
+      color: #FFD700;
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .buy-btn:hover {
+      background-color: #FFD700;
+      color: #000;
+      box-shadow: 0 0 10px #FFD700;
+      text-decoration: none;
+    }
+
+    hr {
+      border: none;
+      height: 1px;
+      background-color: #FFD700;
+      width: 60%;
+      margin: 30px auto;
+    }
+
+    /* ===== НИЖНЯЯ ПАНЕЛЬ ===== */
+    .footer {
+      margin-top: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.7);
+      border-top: 1px solid rgba(255, 215, 0, 0.4);
+      padding: 20px 50px;
+      color: #FFD700;
+      font-size: 14px;
+      flex-wrap: wrap;
+      gap: 10px;
+      animation: fadeIn 2.5s ease;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: "Brush Script MT", cursive;
+      font-size: 22px;
+      color: #FFF8DC;
+      text-shadow: 0 0 6px #FFD700;
+    }
+    .logo img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      filter: brightness(1.2) contrast(0.9);
+    }
+
+    .footer-center {
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .footer-right {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .theme-toggle {
+      background-color: rgba(255, 215, 0, 0.2);
+      border: 1px solid #FFD700;
+      color: #FFD700;
+      border-radius: 50%;
+      width: 38px;
+      height: 38px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      background-color: #FFD700;
+      color: #000;
+      box-shadow: 0 0 15px #FFD700;
+    }
+
+    .contact-btn {
+      background: linear-gradient(45deg, #FFD700, #FFA500);
+      border: none;
+      border-radius: 20px;
+      padding: 10px 18px;
+      font-weight: bold;
+      color: #000;
+      cursor: pointer;
+      transition: 0.4s;
+      animation: pulse 2.5s infinite;
+    }
+
+    .contact-btn:hover {
+      transform: scale(1.1);
+      background: linear-gradient(45deg, #FFA500, #FFD700);
+      box-shadow: 0 0 12px #FFD700;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
+      50% { box-shadow: 0 0 25px rgba(255, 215, 0, 0.8); }
+    }
+
+    .contact-modal {
+      display: none;
+      position: fixed;
+      z-index: 150;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.85);
+      animation: fadeIn 0.5s ease;
+    }
+
+    .contact-content {
+      background: rgba(20, 20, 20, 0.95);
+      color: #FFD700;
+      margin: 10% auto;
+      padding: 30px 50px;
+      border-radius: 15px;
+      width: 400px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+      animation: zoomIn 0.4s ease;
+    }
+
+    .close-contact {
+      float: right;
+      font-size: 28px;
+      cursor: pointer;
+      color: #FFD700;
+      transition: 0.3s;
+    }
+
+    .close-contact:hover {
+      color: white;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes zoomIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    body.light-theme .footer {
+      background-color: rgba(255,255,255,0.9);
+      color: #000;
+      border-top: 1px solid #bbb;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="menu">
+    <a href="index.html">Главная</a>
+    <a href="Info.html">Общая информация</a>
+    <a href="History.html">История</a>
+    <a href="Film.html">Фильмография</a>
+    <a href="Disc.html">Дискография</a>
+    <a href="Link.html">Источники</a>
+    <a href="Shop.html" class="active">Заказать</a>
+    <a href="Contact.html">Контакты</a>
+  </div>
+
+  <div class="content">
+    <h1>Заказать продукцию The Beatles</h1>
+    <p>
+      На нашем сайте вы можете приобрести уникальные товары с символикой <strong>The Beatles</strong> — 
+      легендарной группы, навсегда изменившей историю музыки. Вся продукция официально лицензирована 
+      и станет прекрасным подарком для фанатов или стильным элементом коллекции.
+    </p>
+    <hr>
+
+    <div class="product-list">
+      <div class="product">
+        <img src="tshirt.jpg" alt="Футболка The Beatles">
+        <h3>Футболка “Abbey Road”</h3>
+        <p>Классическая чёрная футболка с легендарной обложкой альбома <em>Abbey Road</em>.</p>
+        <a href="#" class="buy-btn">Купить</a>
+      </div>
+
+      <div class="product">
+        <img src="vinyl.jpg" alt="Винил The Beatles">
+        <h3>Коллекционный винил</h3>
+        <p>Оригинальные пластинки The Beatles в подарочной упаковке. Лимитированное издание.</p>
+        <a href="#" class="buy-btn">Купить</a>
+      </div>
+
+      <div class="product">
+        <img src="poster.jpg" alt="Постер The Beatles">
+        <h3>Постер “Yellow Submarine”</h3>
+        <p>Яркий постер в стиле 60-х годов, выполненный по мотивам одноимённого мультфильма.</p>
+        <a href="#" class="buy-btn">Купить</a>
+      </div>
+
+      <div class="product">
+        <img src="mug.jpg" alt="Кружка The Beatles">
+        <h3>Кружка с логотипом</h3>
+        <p>Керамическая кружка с логотипом The Beatles. Приятное напоминание о любимой группе каждое утро.</p>
+        <a href="#" class="buy-btn">Купить</a>
+      </div>
+
+      <div class="product">
+        <img src="hoodie.jpg" alt="Толстовка The Beatles">
+        <h3>Толстовка “Let It Be”</h3>
+        <p>Комфортная толстовка с принтом участников группы. Отличный вариант для прохладных вечеров.</p>
+        <a href="#" class="buy-btn">Купить</a>
+      </div>
+
+      <div class="product">
+        <img src="bag.jpg" alt="Сумка The Beatles">
+        <h3>Сумка с эмблемой группы</h3>
+        <p>Стильная тканевая сумка с символикой The Beatles. Практично и модно.</p>
+        <a href="#" class="buy-btn">Купить</a>
+      </div>
+    </div>
+
+    <hr>
+    <p style="text-align:center;">
+      💿 Также вы можете оформить предзаказ на <strong>лимитированные издания</strong>, редкие 
+      записи, постеры и памятные коллекционные предметы, посвящённые великой четвёрке.
+    </p>
+  </div>
+
+  <!-- Нижняя панель -->
+  <footer class="footer">
+    <div class="footer-left">
+      <div class="logo">
+        <img src="CroissNoir.png" alt="CroissNoir Logo">
+        <span>CroissNoir</span>
+      </div>
+    </div>
+
+    <div class="footer-center">
+      <p>© 2025 | Учебный проект — The Beatles</p>
+      <p>Создано в рамках курса по веб-дизайну</p>
+    </div>
+
+    <div class="footer-right">
+      <button class="theme-toggle" id="themeToggle" title="Переключить тему">🌙</button>
+      <button class="contact-btn" id="contactBtn">Контакты создателей</button>
+    </div>
+  </footer>
+
+  <!-- Модальное окно контактов -->
+  <div id="contactModal" class="contact-modal">
+    <div class="contact-content">
+      <span class="close-contact">&times;</span>
+      <h2>Контакты создателей</h2>
+      <p>Руководитель проекта: <b>Белов Глеб</b></p>
+      <p>Дизайн и разработка: <b>Команда CroissNoir</b></p>
+      <p>Email: <a href="mailto:croissnoir@gmail.com">croissnoir@gmail.com</a></p>
+    </div>
+  </div>
+
+  <script>
+    // Переключение темы
+    const themeToggle = document.getElementById("themeToggle");
+    themeToggle.addEventListener("click", () => {
+      document.body.classList.toggle("light-theme");
+      themeToggle.textContent = document.body.classList.contains("light-theme") ? "☀️" : "🌙";
+    });
+
+    // Контактное окно
+    const contactBtn = document.getElementById("contactBtn");
+    const contactModal = document.getElementById("contactModal");
+    const closeContact = document.querySelector(".close-contact");
+
+    contactBtn.onclick = () => contactModal.style.display = "block";
+    closeContact.onclick = () => contactModal.style.display = "none";
+    window.onclick = (e) => { if (e.target === contactModal) contactModal.style.display = "none"; };
+  </script>
+</body>
+</html>
